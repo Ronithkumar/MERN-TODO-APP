@@ -37,7 +37,7 @@ Open your browser at `http://localhost:3000` 🌐
 
 ## Preview
 
-![Login Screen](./client/login.png)
+![Login Screen](./client/Login.png)
 
 ---
 
