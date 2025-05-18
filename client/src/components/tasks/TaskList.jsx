@@ -29,7 +29,7 @@ function TaskList({ tasks, setTasks }) {
         <ul
           className="divide-y divide-gray-300 overflow-y-auto"
           style={{
-            maxHeight: "180px", // adjust as needed
+            maxHeight: "180px",
           }}
         >
           {!Array.isArray(tasks) || tasks.length === 0 ? (

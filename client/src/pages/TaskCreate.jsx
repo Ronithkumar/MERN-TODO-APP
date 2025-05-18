@@ -4,7 +4,7 @@ import TaskList from "../components/tasks/TaskList";
 import { fetchTasks, addTask } from "../services/api";
 import DashboardLayout from "../components/Layout/DashboardLayout";
 import useAuthToken from "../hooks/useAuthToken";
-import { FaSpinner } from "react-icons/fa";
+import Loader from "../components/ui/Loader";
 
 function TaskCreate() {
   const [input, setInput] = useState("");
@@ -51,7 +51,7 @@ function TaskCreate() {
 
   return (
     <DashboardLayout>
-      <div className="bg-gray-100 flex justify-center min-h-screen">
+      <div className="bg-gray-100 flex justify-center min-h-full">
         <div className="bg-white min-h-[100px] max-h-[600px] p-10 rounded-xl shadow-md w-full max-w-md overflow-y-auto">
           <h2 className="text-lg font-semibold text-center text-gray-800 mb-4">
             My To-Do List
@@ -67,10 +67,7 @@ function TaskCreate() {
           />
 
           {loading ? (
-            <div className="flex justify-center mt-4 text-blue-600">
-              <FaSpinner className="animate-spin text-2xl" />
-              <span className="ml-2">Loading tasks...</span>
-            </div>
+            <Loader text="Loading tasks..." />
           ) : (
             <TaskList tasks={tasks} setTasks={setTasks} compact />
           )}

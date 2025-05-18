@@ -30,8 +30,6 @@ function TaskForm({
           Mark as complete
         </label>
       </div>
-
-      {/* Button centered */}
       <div className="flex justify-center">
         <Button
           type="submit"

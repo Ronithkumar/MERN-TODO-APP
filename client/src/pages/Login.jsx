@@ -66,7 +66,7 @@ function Login() {
     <>
       <Navbar hideAuthLinks={true} />
 
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 overflow-hidden">
+      <div className="min-h-full p-16 flex flex-col items-center justify-center bg-gray-100 overflow-hidden">
         <div className="bg-white p-10 rounded-3xl shadow-xl w-full max-w-md">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
             {isLoggedIn ? "Welcome Back!" : "Login"}

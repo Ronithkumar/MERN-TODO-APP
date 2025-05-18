@@ -16,7 +16,7 @@ function UpdateProfilePage() {
   useEffect(() => {
     const getUserProfile = async () => {
       try {
-        const data = await fetchUserProfile(); // GET /Users/profile
+        const data = await fetchUserProfile();
         setProfile({
           username: data.username || "",
           email: data.email || "",

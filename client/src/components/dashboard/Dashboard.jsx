@@ -44,7 +44,6 @@ function Dashboard() {
 
   return (
     <div className="max-w-4xl mx-auto mt-24 p-6 bg-white rounded-xl shadow-md border">
-      {/* mt-24 adds margin to avoid overlap with fixed navbar (assuming navbar height ~96px) */}
       <h2 className="text-2xl font-bold mb-6 text-gray-800">
         Welcome back, {user.username}!
       </h2>

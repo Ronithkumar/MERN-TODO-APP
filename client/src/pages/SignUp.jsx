@@ -16,7 +16,7 @@ function SignUp() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const navigate = useNavigate(); // 👈 Add this line
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,7 +62,6 @@ function SignUp() {
       setShowPassword(false);
       setSuccessMessage("User created successfully!");
 
-      // ⏳ Delay 1.5s before redirect
       setTimeout(() => {
         navigate("/login");
       }, 1500);
