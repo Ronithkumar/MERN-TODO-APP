@@ -49,21 +49,28 @@ function UpdateProfilePage() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        Loading...
+      </div>
+    );
 
   return (
     <>
       <Navbar />
 
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Update Your Profile</h1>
-        {error && <div className="text-red-500 mb-4">{error}</div>}
+      <div className="max-w-md mx-auto p-4 sm:p-6 lg:p-8">
+        <h1 className="text-2xl font-bold mb-6 text-center">
+          Update Your Profile
+        </h1>
+        {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
               <label
-                className="block text-sm font-bold mb-2"
                 htmlFor="username"
+                className="block text-sm font-semibold mb-2"
               >
                 Name
               </label>
@@ -73,13 +80,17 @@ function UpdateProfilePage() {
                 name="username"
                 value={profile.username}
                 onChange={handleChange}
-                className="w-full p-2 border rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 required
+                autoComplete="username"
               />
             </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-bold mb-2" htmlFor="email">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-semibold mb-2"
+              >
                 Email
               </label>
               <input
@@ -88,15 +99,16 @@ function UpdateProfilePage() {
                 name="email"
                 value={profile.email}
                 onChange={handleChange}
-                className="w-full p-2 border rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 required
+                autoComplete="email"
               />
             </div>
 
             <button
               type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded-md"
               disabled={updating}
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-md font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {updating ? "Updating..." : "Save Changes"}
             </button>

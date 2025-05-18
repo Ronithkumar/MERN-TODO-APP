@@ -51,8 +51,8 @@ function TaskCreate() {
 
   return (
     <DashboardLayout>
-      <div className="bg-gray-100 flex justify-center min-h-full">
-        <div className="bg-white min-h-[100px] max-h-[600px] p-10 rounded-xl shadow-md w-full max-w-md overflow-y-auto">
+      <div className="bg-gray-100 flex justify-center min-h-screen p-4 sm:p-6">
+        <div className="bg-white min-h-[100px] max-h-[600px] p-6 sm:p-10 rounded-xl shadow-md w-full max-w-md overflow-y-auto">
           <h2 className="text-lg font-semibold text-center text-gray-800 mb-4">
             My To-Do List
           </h2>

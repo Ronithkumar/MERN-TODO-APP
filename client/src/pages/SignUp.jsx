@@ -92,8 +92,8 @@ function SignUp() {
   return (
     <>
       <Navbar hideAuthLinks={true} />
-      <div className="min-h-screen flex items-start justify-center bg-gray-100">
-        <div className="bg-white mt-20 p-8 rounded-2xl shadow-md w-full max-w-md">
+      <div className="flex flex-col items-center justify-start min-h-[calc(100vh)] bg-gray-100 pt-32 px-4 sm:px-6 md:px-8">
+        <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
           <h2 className="text-xl font-semibold text-gray-800 mb-5 text-center">
             Sign Up
           </h2>
@@ -115,7 +115,7 @@ function SignUp() {
             showPassword ? "text" : "password",
             "Enter password"
           )}
-          <div className="mt-4 mb-4  flex items-center">
+          <div className="mt-4 mb-4 flex items-center">
             <input
               type="checkbox"
               checked={showPassword}

@@ -43,7 +43,7 @@ function Dashboard() {
   if (!user) return <p className="text-center mt-20">User not authenticated</p>;
 
   return (
-    <div className="max-w-4xl mx-auto mt-24 p-6 bg-white rounded-xl shadow-md border">
+    <div className="max-w-4xl mx-auto mt-24 p-4 sm:p-6 bg-white rounded-xl shadow-md border min-h-[calc(100vh-6rem)]">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">
         Welcome back, {user.username}!
       </h2>

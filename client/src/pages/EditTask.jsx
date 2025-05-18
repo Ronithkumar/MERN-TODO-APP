@@ -58,8 +58,8 @@ function EditTask() {
 
   return (
     <DashboardLayout>
-      <div className="flex items-center justify-center bg-gray-100">
-        <div className="bg-white p-8 rounded-3xl shadow-lg w-full max-w-lg relative">
+      <div className="flex items-center justify-center min-h-full bg-gray-100 px-4 sm:px-6 lg:px-8">
+        <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-lg w-full max-w-md relative">
           {/* Cancel Button */}
           <Button
             onClick={() => navigate("/tasks")}
