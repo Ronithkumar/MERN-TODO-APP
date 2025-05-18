@@ -1,25 +1,20 @@
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
-const nodemailer = require("nodemailer");
 const User = require("../models/userModel");
-const bcrypt = require("bcrypt");
 const JWT_SECRET = process.env.JWT_SECRET || "ilovecoding$123";
 
+// Create a new user (register)
 exports.createUser = async (req, res) => {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const newUser = await User.create({
-      ...req.body,
-      password: hashedPassword,
-    });
+    const newUser = await User.create(req.body); // Password will be hashed in schema
 
-    // Generate token after signup
+    // Generate JWT
     const token = jwt.sign(
       { id: newUser._id, email: newUser.email, username: newUser.username },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
 
+    // Exclude password before sending response
     const { password: _, ...userWithoutPassword } = newUser._doc;
 
     res.status(201).json({
@@ -32,6 +27,7 @@ exports.createUser = async (req, res) => {
   }
 };
 
+// Login user
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -40,25 +36,20 @@ exports.loginUser = async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    console.log("Entered password:", password);
-    console.log("Stored hash:", user.password);
-
-    const isMatch = await bcrypt.compare(password.trim(), user.password);
+    const isMatch = await user.comparePassword(password.trim());
     if (!isMatch) {
       console.log("DEBUG: Password mismatch");
       return res.status(401).json({ message: "Invalid password" });
     }
 
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     const { password: _, ...userWithoutPassword } = user._doc;
 
@@ -73,6 +64,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
+// Fetch logged-in user's profile
 exports.getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -85,6 +77,7 @@ exports.getUserProfile = async (req, res) => {
   }
 };
 
+// Update profile (except password)
 exports.updateUserProfile = async (req, res) => {
   try {
     const updates = req.body;
@@ -112,6 +105,7 @@ exports.updateUserProfile = async (req, res) => {
   }
 };
 
+// Delete user by ID
 exports.deleteUserById = async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
@@ -124,7 +118,7 @@ exports.deleteUserById = async (req, res) => {
   }
 };
 
-// Change Password Controller
+// Change password
 exports.changePassword = async (req, res) => {
   const userId = req.user.id;
   const { currentPassword, newPassword } = req.body;
@@ -137,7 +131,6 @@ exports.changePassword = async (req, res) => {
 
   try {
     const user = await User.findById(userId);
-
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -147,8 +140,7 @@ exports.changePassword = async (req, res) => {
       return res.status(400).json({ message: "Current password is incorrect" });
     }
 
-    // Update password and save
-    user.password = newPassword;
+    user.password = newPassword; // Will be hashed via pre-save hook
     await user.save();
 
     res.json({ message: "Password updated successfully" });
