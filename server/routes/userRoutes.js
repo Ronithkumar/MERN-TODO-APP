@@ -15,8 +15,4 @@ router.post(
 );
 router.delete("/:id", userController.deleteUserById);
 
-// New routes for password reset
-router.post("/forgot-password", userController.forgotPassword);
-router.post("/reset-password", userController.resetPassword);
-
 module.exports = router;

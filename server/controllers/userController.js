@@ -40,7 +40,7 @@ exports.loginUser = async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ email }).select("+password"); // in case password has select: false
+    const user = await User.findOne({ email }).select("+password");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -89,7 +89,6 @@ exports.updateUserProfile = async (req, res) => {
   try {
     const updates = req.body;
 
-    // Don't allow password change here (optional)
     if (updates.password) {
       return res
         .status(400)
@@ -124,99 +123,10 @@ exports.deleteUserById = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-exports.forgotPassword = async (req, res) => {
-  const { email } = req.body;
 
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    // Generate reset token
-    const resetToken = crypto.randomBytes(32).toString("hex");
-    // Hash the token before saving to DB for security
-    const hashedToken = crypto
-      .createHash("sha256")
-      .update(resetToken)
-      .digest("hex");
-
-    // Set reset token and expiry (e.g., 1 hour)
-    user.resetPasswordToken = hashedToken;
-    user.resetPasswordExpires = Date.now() + 3600000;
-    await user.save();
-
-    // TODO: Send email with resetToken (unhashed) to user
-    // Example reset URL:
-    const resetUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/Users/reset-password?token=${resetToken}`;
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail", // or your email provider
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: user.email,
-      subject: "Password Reset Request",
-      text: `You requested a password reset. Click the link to reset your password: ${resetUrl}`,
-    };
-
-    await transporter.sendMail(mailOptions);
-
-    res.json({
-      message:
-        "Password reset link sent to your email if it exists in our system.",
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error sending password reset link." });
-  }
-};
-
-exports.resetPassword = async (req, res) => {
-  const { token, newPassword } = req.body;
-
-  if (!token || !newPassword)
-    return res
-      .status(400)
-      .json({ message: "Token and new password are required." });
-
-  try {
-    // Hash the token from the user to compare with DB
-    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
-
-    // Find user by token and check expiration
-    const user = await User.findOne({
-      resetPasswordToken: hashedToken,
-      resetPasswordExpires: { $gt: Date.now() },
-    });
-
-    if (!user) {
-      return res.status(400).json({ message: "Invalid or expired token." });
-    }
-
-    // Hash the new password and update
-    user.password = await bcrypt.hash(newPassword, 10);
-
-    // Clear reset token fields
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = undefined;
-
-    await user.save();
-
-    res.json({ message: "Password has been reset successfully." });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to reset password." });
-  }
-};
 // Change Password Controller
 exports.changePassword = async (req, res) => {
-  const userId = req.user.id; // assuming req.user is set by your auth middleware
+  const userId = req.user.id;
   const { currentPassword, newPassword } = req.body;
 
   if (!currentPassword || !newPassword) {
@@ -232,14 +142,13 @@ exports.changePassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Assuming your User model has a method to compare hashed password
     const isMatch = await user.comparePassword(currentPassword);
     if (!isMatch) {
       return res.status(400).json({ message: "Current password is incorrect" });
     }
 
     // Update password and save
-    user.password = newPassword; // Make sure your model hashes password before save
+    user.password = newPassword;
     await user.save();
 
     res.json({ message: "Password updated successfully" });
